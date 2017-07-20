@@ -20,6 +20,9 @@ urlpatterns = (
     url(r'^blog/(\d)/comments/$', get_comments),
     url(r'^blog/(\d)/comment/$', comment),
 
+    #search
+    url(r'^search/blog/$',search)
+
 )
 
 

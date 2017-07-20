@@ -5,7 +5,7 @@ from django.contrib.auth import logout, authenticate, login
 from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from .models import Blog , BlogUser
+from .models import *
 
 
 
@@ -116,3 +116,27 @@ def blog_id_get(request):
     else:
         return JsonResponse(data={'status': -1}, safe=False)
 
+
+
+
+###########################################Celery
+
+
+@csrf_exempt
+def search(request):
+
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            searched_words = form.cleaned_data['words']
+            WS = WordsString()
+            blogs = WS.search_blogs(searched_words)
+            #TODO show resullt blogs in form
+            return JsonResponse(data={'status': 0}, safe=False)
+        else:
+            return JsonResponse(data={'status': -1}, safe=False)
+
+    else:
+        form = SearchForm()
+
+    return render(request, 'registration/register.html', {'form': form, })

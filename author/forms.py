@@ -45,14 +45,3 @@ class LoginForm(forms.Form):
 
 
 
-class SearchForm(forms.Form):
-
-    words = forms.CharField(label='Enter 2 - 10 words you want to look up (Put space in between)')
-
-    def clean_words(self):
-        words = str(self.cleaned_data['words'])
-        re = r'^(\w\s+){1,9}\w\s?$'
-        if not re.search( re , words):
-            raise forms.ValidationError('The Entered words are not valid.')
-
-        return words

@@ -1,11 +1,10 @@
-from django.http import JsonResponse, QueryDict
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from celery import Celery
-from P3.celery import count_task
+from author.tasks import count_task
 from author.models import Blog, BlogUser
 from .models import Post, Comment
 from django.forms.models import model_to_dict
-from P3 import celery
+
 
 
 # 3
@@ -51,12 +50,10 @@ def get_posts(request, blog_id):
 # 4  #5
 @csrf_exempt
 def post(request, blog_id):
-    try:
+    # try:
 
         blog = Blog.objects.get(id=blog_id)
-        # print(request.META)
         token = request.META['HTTP_MYTOKEN']  # 'HTTP_X_TOKEN']
-        print(token)
         if token is None:
             return JsonResponse(data={'status': -1, 'message': 'no/wrong token'}, safe=False)
 
@@ -75,15 +72,14 @@ def post(request, blog_id):
             post.sum = request.POST['summary']
             post.text = request.POST['text']
             post.save()
-            blog.posts_words = count_task(blog_id)  #https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html
-            #TODO
-
+            blog.posts_words = count_task(blog_id)
+            blog.save()
             return JsonResponse(data={'status': 0}, safe=False)
         else:
             return JsonResponse(data={'status': -1}, safe=False)
 
-    except:
-        return JsonResponse(data={'status': -1}, safe=False)
+    # except:
+    #     return JsonResponse(data={'status': -1}, safe=False)
 
 
 # 6

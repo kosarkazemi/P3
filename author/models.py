@@ -14,7 +14,8 @@ class BlogUser(models.Model):
 
 class Blog(models.Model):
     owner = models.ForeignKey(BlogUser, blank=True, null=True)
-    posts_words = models.CharField(max_length=1000, blank=True, null=True, default=None)
+    posts_words = models.CharField(max_length=1000, blank=True, null=True, default='')
+    title = models.CharField(max_length=100, blank=True, null=True, default='NO Title')
 
 
 
@@ -24,9 +25,10 @@ class WordsString:
     def make_dict(self,ws): # make dictionary out of ws
         dict={}
         if ws is not '':
-            for item in ws.split(','):
-                it=item.split('-')
-                dict[it[0]]=it[1]
+            if ws is not None:
+                for item in ws.split(','):
+                    it = item.split('-')
+                    dict[it[0]] = it[1]
         return dict
 
     def dict_to_ws(self,dict): # make ws out of dictionary
@@ -69,9 +71,8 @@ class WordsString:
 
     def search_blogs(self,searched_words): # search given words in all blogs, rate them and return top ten
         blogs = []
-        for blog in blogs:
+        for blog in Blog.objects.all():
             blogs.append([blog , self.score_blog(blog.posts_words,searched_words)])
-            print('blog: '+blog) # here
         top_blogs = heapq.nlargest( 10 , blogs , key=lambda x:x[1])
         return top_blogs
 
@@ -80,14 +81,14 @@ class WordsString:
         score=0
         factor=1
         for word in sp_words:
-            n=self.count_word(word,ws)
+            n=int(self.count_word(word,ws))
             if n>0:
                 factor=factor+0.1 # first word is more important
-            score=score+n*factor
+            score=round(score+n*factor,4)
         return score
 
     def count_word(self,word,ws): # returns the number of a given word in a ws
-        dict=self.make_dict(self, ws)
+        dict=self.make_dict(ws)
         return dict.get(word,0)
 
 

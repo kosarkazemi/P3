@@ -21,7 +21,10 @@ urlpatterns = (
     url(r'^blog/(\d)/comment/$', comment),
 
     #search
-    url(r'^search/blog/$',search)
+    url(r'^search/blog/$',search),
+
+    #P2 files
+    # url(r'^blog/(\d)$',None ) ### TODO
 
 )
 

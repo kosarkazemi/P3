@@ -51,10 +51,11 @@ def register_page(request):
             registered_user.save()
 
             default_blog.owner = registered_user
+            default_blog.title = str(registered_user['first_name']+' '+registered_user['first_name']+' \'s first blog!')
             default_blog.save()
 
             login(request, user)
-            # redirect('login_page', request) TODO
+            #redirect('login_page', request) TODO
             return JsonResponse(data={'status': 0}, safe=False )
         else:
             return JsonResponse(data={'status': -1 } , safe=False)
@@ -64,31 +65,7 @@ def register_page(request):
 
     return render(request, 'registration/register.html', {'form': form,})
 
-
 #2
-
-# def login_page(request):
-#     if request.method == 'POST':
-#         print(request.POST)
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password')
-#             user = authenticate(username=username,
-#                                 password=password)
-#
-#             login(request, user)
-#             token = token_generator()
-#             loged_user = User.objects.get(username=username)
-#             loged_user.token = token
-#             loged_user.save()
-#             return JsonResponse(data={'status': 0,'token': token}, safe=False)
-#         else:
-#             return JsonResponse(data={'status': -1 } , safe=False)
-#     else:
-#         form = LoginForm()
-#
-#     return render(request, 'registration/login.html', {'form': form, })
-
 @csrf_exempt
 def login_page(request):
     if request.method == 'POST':
@@ -119,6 +96,9 @@ def blog_id_get(request):
 
 
 
+
+
+
 ###########################################Celery
 
 
@@ -127,23 +107,28 @@ def search(request):
 
     if request.method == 'POST':
         words=request.POST['q']
-        searchReg = r'^(\w\s+){1,9}\w(\s)?$' ### bug !
-        if not re.search(searchReg, words):
-            return JsonResponse(data={'status': -1 }, safe=False) # massage
-
-        else:
+        searchReg = re.compile('^(\w+\s+){1,9}\w+(\s)*$')
+        if bool(re.search( searchReg , words )):
             WS = WordsString()
-            blogs = WS.search_blogs(words)
-
-            # TODO show blogs
-            return render(request, 'results.html', {'blogs': blogs, })
-
+            blogs = WS.search_blogs(words) # TODO show blogs
+            blogsStr = blog_box(blogs)
+            print(blogsStr)
+            return render(request, 'results.html', {'blogsStr': blogsStr, 'words': words})
+        else:
+            return render(request , 'search.html', {'msg': 'Please enter 2-10 words in acceptable format \n (For example: mall ball tall)' ,})
     else:
         print('get!!!!!')
-        return render(request, 'search.html')
+        return render(request, 'search.html' , {'msg': None, })
 
 
 
+def blog_box(blogs):
+    blogBox = []
+    for item in blogs:
+        if int(item[1]) > 0 :
+            bs = str(str(item[0].id) +"-          "+str(item[0].title)+"-score:"+str(item[1]))
+            blogBox.append(bs)
+    return blogBox
 
 
 

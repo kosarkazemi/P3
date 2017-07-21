@@ -9,11 +9,18 @@ logger = get_task_logger(__name__)
 app = Celery('tasks')
 
 
+# @app.task
+# @receiver(post_save, sender=Post ) #https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html //TODO
+# def count_task_signal(sender, instance, created, **kwargs):
+#     if created:
+#        return count_task(blog_id=instance)
+
+
 @app.task
-# @receiver(post_save, sender=Post) #https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html //TODO
-def count_task(blog_id):  # get blog_id and count all the posts_words
+@receiver(post_save, sender=Post ) #https://simpleisbetterthancomplex.com/tutorial/2016/07/28/how-to-create-django-signals.html //TODO
+def count_task( sender, instance, **kwargs):  # get blog_id and count all the posts_words
     posts_words = ''
-    blog = Blog.objects.get(id=blog_id)
+    blog = Blog.objects.get(id=instance.blog_id)
     WS=WordsString()
     post_of_the_blog = Post.objects.filter(blog=blog)
     for post in post_of_the_blog:

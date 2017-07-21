@@ -50,8 +50,7 @@ def get_posts(request, blog_id):
 # 4  #5
 @csrf_exempt
 def post(request, blog_id):
-    # try:
-
+    try:
         blog = Blog.objects.get(id=blog_id)
         token = request.META['HTTP_MYTOKEN']  # 'HTTP_X_TOKEN']
         if token is None:
@@ -72,14 +71,13 @@ def post(request, blog_id):
             post.sum = request.POST['summary']
             post.text = request.POST['text']
             post.save()
-            blog.posts_words = count_task(blog_id)
+            blog.posts_words = count_task(blog_id,post)
             blog.save()
             return JsonResponse(data={'status': 0}, safe=False)
         else:
             return JsonResponse(data={'status': -1}, safe=False)
-
-    # except:
-    #     return JsonResponse(data={'status': -1}, safe=False)
+    except:
+        return JsonResponse(data={'status': -1}, safe=False)
 
 
 # 6

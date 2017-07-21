@@ -63,7 +63,6 @@ class WordsString:
                 n = int(new_dict[key]) + int(comb_dict[key])
                 dict[key] = n
         new_ws = self.dict_to_ws(comb_dict)
-        print('new_ws: '+new_ws)
         return new_ws
 
 

@@ -23,7 +23,7 @@ urlpatterns = (
     #search
     url(r'^search/blog/$',search),
 
-    #P2 files
+    #static files
     # url(r'^blog/(\d)$',None ) ### TODO
 
 )

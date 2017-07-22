@@ -3,15 +3,15 @@ from django.contrib import admin
 from author.views import *
 from blog.views import *
 
-##TODO sending serverside files
+
 
 urlpatterns = (
     #author
     url(r'^admin/', admin.site.urls),
     url(r'^$', main_page),
-    url(r'^auth/register/', register_page),
+    url(r'^register/', register_page , name='register'),
+    url(r'^logout/$', logout_page , name='logout'),
     url(r'^auth/login/$', login_page),
-    url(r'^auth/logout/$', logout_page),
     url(r'^auth/blog_id/$', blog_id_get),
 
     #blog
@@ -25,6 +25,7 @@ urlpatterns = (
 
     #static files
     # url(r'^blog/(\d)$',None ) ### TODO
+    url(r'^login/$', login_page_static , name='login')
 
 )
 

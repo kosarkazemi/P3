@@ -17,10 +17,9 @@ def logout_page(request):
     user = request.user
     logged_in_user = BlogUser.objects.filter(user=user)
     logged_in_user.token = None
-    logged_in_user.save()
-
+    # logged_in_user.save()
     logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('auth/login/')
 
 
 def token_generator(size=20 , chars= (string.ascii_uppercase + string.digits)):
@@ -51,12 +50,11 @@ def register_page(request):
             registered_user.save()
 
             default_blog.owner = registered_user
-            default_blog.title = str(registered_user['first_name']+' '+registered_user['first_name']+' \'s first blog!')
+            default_blog.title = str(str(registered_user['first_name']+' '+str(registered_user['first_name'])+' \'s first blog!'))
             default_blog.save()
 
             login(request, user)
-            #redirect('login_page', request) TODO
-            return JsonResponse(data={'status': 0}, safe=False )
+            return render(request, 'P2/login.html') #JsonResponse(data={'status': 0}, safe=False )
         else:
             return JsonResponse(data={'status': -1 } , safe=False)
 
@@ -110,7 +108,7 @@ def search(request):
         searchReg = re.compile('^(\w+\s+){1,9}\w+(\s)*$')
         if bool(re.search( searchReg , words )):
             WS = WordsString()
-            blogs = WS.search_blogs(words) # TODO show blogs
+            blogs = WS.search_blogs(words)
             blogsStr = blog_box(blogs)
             print(blogsStr)
             return render(request, 'results.html', {'blogsStr': blogsStr, 'words': words})
@@ -130,6 +128,12 @@ def blog_box(blogs):
             blogBox.append(bs)
     return blogBox
 
+
+
+################################################static
+
+def login_page_static(request):
+    return render(request, 'P2/login.html')
 
 
 

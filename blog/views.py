@@ -11,7 +11,6 @@ from django.forms.models import model_to_dict
 @csrf_exempt
 def get_posts(request, blog_id):
     try:
-
         token = request.META['HTTP_MYTOKEN']
 
         if token is None:
@@ -34,11 +33,11 @@ def get_posts(request, blog_id):
                 offset = request.GET['offset']
             else:
                 offset = 0
-
+            count=int(count)+1
+            offset=int(offset)
             for post in Post.objects.filter(blog=blog)[offset:(offset + count)]:
                 lst.append(model_to_dict(post))
 
-            print(str(lst))
             return JsonResponse(data={'status': 0, 'posts': lst}, safe=False)
         else:
             return JsonResponse(data={'status': -1}, safe=False)
@@ -104,6 +103,8 @@ def get_comments(request, blog_id):
             else:
                 offset = 0
 
+            count = int(count)+1
+            offset = int(offset)
             for comment in Comment.objects.filter(blog=blog)[offset:(offset + count)]:
                 lst.append(model_to_dict(comment))
             return JsonResponse(data={'status': 0, 'comments': lst}, safe=False)

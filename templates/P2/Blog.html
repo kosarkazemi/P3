@@ -17,7 +17,9 @@
     <div id="header">
         <h1>Cartoon Blog!</h1>
         <div class="postLink">
-            <a class="button" href="writePost.html" target="_blank">Write a new post !</a>
+{#            {% with "blog/"|add:blog_id|add:"/writePost/" as adr %}#}
+            <a class="button" href='writePost' src='writePost.html'>Write a new post !</a>
+{#            {% endwith %}#}
         </div>
     </div>
     <ul id="blog">

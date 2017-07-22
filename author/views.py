@@ -19,7 +19,7 @@ def logout_page(request):
     logged_in_user.token = None
     # logged_in_user.save()
     logout(request)
-    return HttpResponseRedirect('auth/login/')
+    return render(request, 'P2/login.html')
 
 
 def token_generator(size=20 , chars= (string.ascii_uppercase + string.digits)):
@@ -137,6 +137,12 @@ def login_page_static(request):
 
 
 
+def blog_by_id(request,blog_id):
+    return render(request, 'P2/Blog.html', {'blog_id': blog_id})
 
 
+def write_post(request,blog_id):
+    return render(request, 'P2/writePost.html', {'blog_id': blog_id})
 
+def blog_more(request,blog_id):
+    return render(request, 'P2/Blog-more.html', {'blog_id': blog_id})

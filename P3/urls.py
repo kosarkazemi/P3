@@ -12,7 +12,7 @@ urlpatterns = (
     url(r'^register/', register_page , name='register'),
     url(r'^logout/$', logout_page , name='logout'),
     url(r'^auth/login/$', login_page),
-    url(r'^auth/blog_id/$', blog_id_get),
+    url(r'^auth/blog_id/$', blog_id_get , name='blog_id'),
 
     #blog
     url(r'^blog/(\d)/posts/$', get_posts),
@@ -24,8 +24,11 @@ urlpatterns = (
     url(r'^search/blog/$',search),
 
     #static files
-    # url(r'^blog/(\d)$',None ) ### TODO
-    url(r'^login/$', login_page_static , name='login')
+    url(r'^blog/(\d)/$', blog_by_id , name='blog_by_id'),
+    url(r'^login/$', login_page_static , name='login'),
+    url(r'^blog/(\d)/Blog-more(.*)$', blog_more , name='blog_more'),
+    url(r'^blog/(\d)/writePost/$', write_post , name='writePost')
+    # url(r'^comment$', write_comment , name='write_comment'),
 
 )
 
